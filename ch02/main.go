@@ -21,7 +21,7 @@ func startJVM(cmd *Cmd) {
 	className := strings.Replace(cmd.class, ".", "/", -1)
 	classData, _, err := cp.ReadClass(className)
 	if err != nil {
-		fmt.Printf("Could not find or load main class #{cmd.class} \n")
+		fmt.Printf("Could not find or load main class: %s \n", cmd.class)
 		return
 	}
 	fmt.Printf("class data: %v \n", classData)
