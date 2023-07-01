@@ -1,6 +1,5 @@
 package heap
 
-import "strings"
 import "jvmgo/ch06/classfile"
 
 // name, superClassName and interfaceNames are all binary names(jvms8-4.2.1)
@@ -17,7 +16,7 @@ type Class struct {
 	interfaces        []*Class      // 实现的接口列表
 	instanceSlotCount uint          // 实例变量占用的空间
 	staticSlotCount   uint          // 类变量占用的空间
-	staticVars        *Slots        // 静态变量
+	staticVars        Slots         // 静态变量
 }
 
 /**
