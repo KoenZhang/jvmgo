@@ -42,7 +42,93 @@ func link(class *Class) {
 }
 
 func prepare(class *Class) {
+	calcInstanceFieldSlotIds(class)
+	calcStaticFieldSlotIds(class)
+	allocAndInitStaticVars(class)
 
+}
+
+/** 给类变量分配空间，然后给它们赋予初始值  */
+func allocAndInitStaticVars(class *Class) {
+	class.staticVars = newSlots(class.staticSlotCount)
+	// 给类变量赋予初始值
+	for _, field := range class.fields {
+		/**
+		* 如果静态变量属于基本类型或String类型，有final修饰符，
+		* 且它的值在编译期已知，则该值存储在class文件常量池中。
+		* initStaticFinalVar（）函数从常量池中加载常量值，然后给静态变量
+		 */
+		if field.IsStatic() && field.IsFinal() {
+			initStaticFinalVar(class, field)
+		}
+	}
+}
+
+/**
+* 如果静态变量属于基本类型或String类型，有final修饰符，
+* 且它的值在编译期已知，则该值存储在class文件常量池中。
+* initStaticFinalVar（）函数从常量池中加载常量值，然后给静态变量
+ */
+func initStaticFinalVar(class *Class, field *Field) {
+	vars := class.staticVars
+	cp := class.constantPool
+	cpIndex := field.ConstValueIndex()
+	slotId := field.SlotId()
+	if cpIndex > 0 {
+		switch field.Descriptor() {
+		case "Z", "B", "C", "S", "I":
+			val := cp.GetConstant(cpIndex).(int32)
+			vars.SetInt(slotId, val)
+		case "J":
+			val := cp.GetConstant(cpIndex).(int64)
+			vars.SetLong(slotId, val)
+		case "F":
+			val := cp.GetConstant(cpIndex).(float32)
+			vars.SetFloat(slotId, val)
+		case "D":
+			val := cp.GetConstant(cpIndex).(float64)
+			vars.SetDouble(slotId, val)
+		case "Ljava/lang/String;":
+			panic("todo")
+		}
+	}
+}
+
+/** 计算 静态字段 的个数 */
+func calcStaticFieldSlotIds(class *Class) {
+	slotId := uint(0)
+	for _, field := range class.fields {
+		if field.IsStatic() {
+			field.slotId = slotId
+			slotId++
+			if field.isLongOrDouble() {
+				slotId++
+			}
+		}
+	}
+	class.staticSlotCount = slotId
+}
+
+/** 计算 实例字段(普通变量，非静态变量) 的个数，同时给它们编号:
+*	1. 类是可以继承的。也就是说，在数实例变量时，要递归地数超类的实例变量
+*	2. 对于 实例字段，一定要从继承关系的最顶端，也就是java.lang.Object开始编号
+ */
+func calcInstanceFieldSlotIds(class *Class) {
+	slotId := uint(0)
+	if class.superClass != nil {
+		slotId = class.superClass.instanceSlotCount
+	}
+
+	for _, field := range class.fields {
+		if !field.IsStatic() {
+			field.slotId = slotId
+			slotId++
+			if field.isLongOrDouble() {
+				slotId++
+			}
+		}
+	}
+	class.instanceSlotCount = slotId
 }
 
 // 为了确保安全性，Java虚拟机规范要求在执行类的任何代码之前，对类进行严格的验证

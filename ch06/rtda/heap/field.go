@@ -5,7 +5,7 @@ import "jvmgo/ch06/classfile"
 type Field struct {
 	ClassMember
 	constValueIndex uint
-	slotId          uint
+	slotId          uint // Slot槽所在位置
 }
 
 func newFields(class *Class, cfFields []*classfile.MemberInfo) []*Field {

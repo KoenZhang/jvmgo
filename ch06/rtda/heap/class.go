@@ -1,6 +1,9 @@
 package heap
 
-import "jvmgo/ch06/classfile"
+import (
+	"jvmgo/ch06/classfile"
+	"strings"
+)
 
 // name, superClassName and interfaceNames are all binary names(jvms8-4.2.1)
 type Class struct {
@@ -73,4 +76,15 @@ func (self *Class) IsEnum() bool {
 	return 0 != self.accessFlags&ACC_ENUM
 }
 
-// jvm5.4.4
+// 如果类D想访问类C，需要满足两个条件之一：C是public，或者C和D在同一个运行时包内
+func (self *Class) isAccessibleTo(other *Class) bool {
+	return self.IsPublic() || self.getPackageName() == other.getPackageName()
+}
+
+// 如果类D想访问类C，需要满足两个条件之一：C是public，或者C和D在同一个运行时包内
+func (self *Class) getPackageName() string {
+	if i := strings.LastIndex(self.name, "/"); i > 0 {
+		return self.name[:i]
+	}
+	return ""
+}
