@@ -88,3 +88,7 @@ func (self *Class) getPackageName() string {
 	}
 	return ""
 }
+
+func (self *Class) NewObject() *Object {
+	return newObject(self)
+}
