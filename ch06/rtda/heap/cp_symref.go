@@ -8,7 +8,7 @@ type SymRef struct {
 }
 
 // 如果类符号引用已经解析，ResolvedClass（）方法直接返回类指针
-func (self *SymRef) ResolverdClass() *Class {
+func (self *SymRef) ResolvedClass() *Class {
 	if self.class == nil {
 		self.ResolveClassRef()
 	}

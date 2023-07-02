@@ -30,7 +30,7 @@ func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
 
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef)
-	class := classRef.ResolverdClass()
+	class := classRef.ResolvedClass()
 	if !ref.IsInstanceOf(class) {
 		panic("java.lang.ClassCastException")
 	}

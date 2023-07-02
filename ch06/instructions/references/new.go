@@ -23,7 +23,7 @@ func (self *NEW) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
 	// 从当前类的运行时常量池中找到一个类符号引用
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef)
-	class := classRef.ResolverdClass()
+	class := classRef.ResolvedClass()
 	// 接口和抽象类都不能实例化
 	if class.IsInterface() || class.IsAbstract() {
 		panic("java.lang.InstantiationError")

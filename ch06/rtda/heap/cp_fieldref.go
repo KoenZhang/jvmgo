@@ -28,7 +28,7 @@ func (self *FieldRef) ResolvedField() *Field {
  */
 func (self *FieldRef) ResolveFieldRef() {
 	d := self.cp.class
-	c := self.ResolverdClass()
+	c := self.ResolvedClass()
 	field := lookupField(c, self.name, self.descriptor)
 	if field == nil {
 		panic("java.lang.NoSuchFieldError")
