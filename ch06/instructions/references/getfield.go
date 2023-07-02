@@ -45,5 +45,7 @@ func (self *GET_FIELD) Execute(frame rtda.Frame) {
 		stack.PushDouble(slots.GetDouble(slotId))
 	case 'L', '[':
 		stack.PushRef(slots.GetRef(slotId))
+	default:
+		// todo
 	}
 }
