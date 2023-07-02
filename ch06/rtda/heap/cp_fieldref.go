@@ -14,7 +14,7 @@ func newFieldRef(cp *ConstantPool, refInfo *classfile.ConstantFieldrefInfo) *Fie
 	return ref
 }
 
-func (self *FieldRef) ResolveField() *Field {
+func (self *FieldRef) ResolvedField() *Field {
 	if self.field == nil {
 		self.ResolveFieldRef()
 	}
