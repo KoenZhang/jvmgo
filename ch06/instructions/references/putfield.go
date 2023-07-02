@@ -18,7 +18,7 @@ type PUT_FIELD struct {
 	base.Index16Instruction
 }
 
-func (self *PUT_FIELD) Execute(frame rtda.Frame) {
+func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
 	// 获取当前方法
 	currentMethod := frame.Method()
 	// 根据当前方法获取当前类

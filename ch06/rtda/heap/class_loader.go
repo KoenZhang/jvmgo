@@ -11,7 +11,7 @@ type ClassLoader struct {
 	classMap map[string]*Class    //	已经加载过的class文件， key是类的完全限定名， 这里可以将其当作方法区的简化实现
 }
 
-func newClassLoader(cp *classpath.Classpath) *ClassLoader {
+func NewClassLoader(cp *classpath.Classpath) *ClassLoader {
 	return &ClassLoader{
 		cp:       cp,
 		classMap: make(map[string]*Class),

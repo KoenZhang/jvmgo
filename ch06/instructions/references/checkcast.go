@@ -16,7 +16,7 @@ type CHECK_CAST struct {
 	base.Index16Instruction
 }
 
-func (self *CHECK_CAST) Execute(frame rtda.Frame) {
+func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
 	// 操作数栈
 	stack := frame.OperandStack()
 	// 弹出引用

@@ -24,15 +24,15 @@ type LDC2_W struct {
 	base.Index16Instruction
 }
 
-func (self *LDC) Execute(frame rtda.Frame) {
+func (self *LDC) Execute(frame *rtda.Frame) {
 	_ldc(frame, self.Index)
 }
 
-func (self *LDC_W) Execute(frame rtda.Frame) {
+func (self *LDC_W) Execute(frame *rtda.Frame) {
 	_ldc(frame, self.Index)
 }
 
-func (self *LDC2_W) Execute(frame rtda.Frame) {
+func (self *LDC2_W) Execute(frame *rtda.Frame) {
 	// 获取操作数栈
 	stack := frame.OperandStack()
 	cp := frame.Method().Class().ConstantPool()
@@ -48,7 +48,7 @@ func (self *LDC2_W) Execute(frame rtda.Frame) {
 }
 
 // 从运行时常量池中加载常量值，并把它推入操作数栈
-func _ldc(frame rtda.Frame, index uint) {
+func _ldc(frame *rtda.Frame, index uint) {
 	// 操作数栈
 	stack := frame.OperandStack()
 	// 运行时常量池

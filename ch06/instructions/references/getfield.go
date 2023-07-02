@@ -15,7 +15,7 @@ type GET_FIELD struct {
 	base.Index16Instruction
 }
 
-func (self *GET_FIELD) Execute(frame rtda.Frame) {
+func (self *GET_FIELD) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef)
 	field := fieldRef.ResolvedField()
