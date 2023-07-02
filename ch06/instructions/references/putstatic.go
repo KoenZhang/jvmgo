@@ -38,8 +38,8 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 	field := fieldRef.ResolvedField()
 	// 获取当前字段所属的类型
 	class := field.Class()
-	// 静态字段，抛出异常
-	if field.IsStatic() {
+	// 非静态字段，抛出异常
+	if !field.IsStatic() {
 		panic("java.lang.IncompatibleClassChangeError")
 	}
 	// 常量， 只能在类初始化方法中给它赋值
