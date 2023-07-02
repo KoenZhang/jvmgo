@@ -1,9 +1,8 @@
-package references
+package constants
 
 import (
 	"jvmgo/ch06/instructions/base"
 	"jvmgo/ch06/rtda"
-	"jvmgo/ch06/rtda/heap"
 )
 
 /**
@@ -62,10 +61,10 @@ func _ldc(frame *rtda.Frame, index uint) {
 		stack.PushInt(c.(int32))
 	case float32:
 		stack.PushFloat(c.(float32))
-	case string:
-		// todo
-	case *heap.ClassRef:
-		// todo
+	//case string:
+	//	// todo
+	//case *heap.ClassRef:
+	//	// todo
 	default:
 		panic("todo: ldc!")
 	}
