@@ -1,55 +1,38 @@
 package references
 
-import (
-	"jvmgo/ch06/instructions/base"
-	"jvmgo/ch06/rtda"
-	"jvmgo/ch06/rtda/heap"
-)
+import "jvmgo/ch06/instructions/base"
+import "jvmgo/ch06/rtda"
+import "jvmgo/ch06/rtda/heap"
 
-// 取出类的某个静态变量值，然后推入栈顶
-type GET_STATIC struct {
-	// 常量池索引
-	base.Index16Instruction
-}
+// Get static field from class
+type GET_STATIC struct{ base.Index16Instruction }
 
 func (self *GET_STATIC) Execute(frame *rtda.Frame) {
-	// 获取当前方法
-	method := frame.Method()
-	// 获取当前类
-	currentClass := method.Class()
-	// 获取常量池
-	cp := currentClass.ConstantPool()
-	// 获取字段引用
+	cp := frame.Method().Class().ConstantPool()
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef)
-	// 解析字段引用，获取字段
 	field := fieldRef.ResolvedField()
-	// 获取这个字段属于哪个类
 	class := field.Class()
+	// todo: init class
 
-	// 如果解析后的字段不是静态字段，要抛出IncompatibleClassChangeError异常。如果声明字段的类还没有初始化好，也需要先初始化。getstatic只是读取静态变量的值，自然也就不用管它是否是final了
 	if !field.IsStatic() {
-		panic("java.lang.IncompatibleClassError")
+		panic("java.lang.IncompatibleClassChangeError")
 	}
 
-	/*** 根据字段类型，从静态变量中取出相应的值，然后推入操作数栈顶  */
-	// 获取字段描述符
 	descriptor := field.Descriptor()
-	// 获取这个字段存储在常量数组的索引值
 	slotId := field.SlotId()
-	// 类的常量数组
 	slots := class.StaticVars()
-	// 获取操作数栈
 	stack := frame.OperandStack()
+
 	switch descriptor[0] {
-	case 'Z', 'B', 'C', 'S', 'I': //  Z--boolean, B--byte, C--Char, S--short, I--int
+	case 'Z', 'B', 'C', 'S', 'I':
 		stack.PushInt(slots.GetInt(slotId))
-	case 'F': //  F--float
+	case 'F':
 		stack.PushFloat(slots.GetFloat(slotId))
-	case 'J': // J--long
+	case 'J':
 		stack.PushLong(slots.GetLong(slotId))
-	case 'D': // D--double
+	case 'D':
 		stack.PushDouble(slots.GetDouble(slotId))
-	case 'L', '[': // L--对象类型, [--数组
+	case 'L', '[':
 		stack.PushRef(slots.GetRef(slotId))
 	default:
 		// todo

@@ -2,36 +2,19 @@ package heap
 
 import "jvmgo/ch06/classfile"
 
-// 字段和方法的共有信息
-
 type ClassMember struct {
-	accessFlags uint16 // 字段或者方法的访问标志
-	name        string // 字段或者方法名
-	descriptor  string // 字段或者方法的描述符
-	class       *Class // 属于哪个类，这样可以通过字段访问到所属的类
+	accessFlags uint16
+	name        string
+	descriptor  string
+	class       *Class
 }
 
-// 从 classfile 文件中复制数据
 func (self *ClassMember) copyMemberInfo(memberInfo *classfile.MemberInfo) {
 	self.accessFlags = memberInfo.AccessFlags()
 	self.name = memberInfo.Name()
 	self.descriptor = memberInfo.Descriptor()
 }
 
-// getters
-func (self *ClassMember) Name() string {
-	return self.name
-}
-func (self *ClassMember) Descriptor() string {
-	return self.descriptor
-}
-func (self *ClassMember) Class() *Class {
-	return self.class
-}
-
-/**
-以下8个为访问标志权限
-*/
 func (self *ClassMember) IsPublic() bool {
 	return 0 != self.accessFlags&ACC_PUBLIC
 }
@@ -51,6 +34,18 @@ func (self *ClassMember) IsSynthetic() bool {
 	return 0 != self.accessFlags&ACC_SYNTHETIC
 }
 
+// getters
+func (self *ClassMember) Name() string {
+	return self.name
+}
+func (self *ClassMember) Descriptor() string {
+	return self.descriptor
+}
+func (self *ClassMember) Class() *Class {
+	return self.class
+}
+
+// jvms 5.4.4
 func (self *ClassMember) isAccessibleTo(d *Class) bool {
 	if self.IsPublic() {
 		return true

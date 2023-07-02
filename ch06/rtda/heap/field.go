@@ -5,7 +5,7 @@ import "jvmgo/ch06/classfile"
 type Field struct {
 	ClassMember
 	constValueIndex uint
-	slotId          uint // Slot槽所在位置
+	slotId          uint
 }
 
 func newFields(class *Class, cfFields []*classfile.MemberInfo) []*Field {
@@ -18,16 +18,12 @@ func newFields(class *Class, cfFields []*classfile.MemberInfo) []*Field {
 	}
 	return fields
 }
-
 func (self *Field) copyAttributes(cfField *classfile.MemberInfo) {
 	if valAttr := cfField.ConstantValueAttribute(); valAttr != nil {
 		self.constValueIndex = uint(valAttr.ConstantValueIndex())
 	}
 }
 
-/**
-以下3个为字段的访问权限
-*/
 func (self *Field) IsVolatile() bool {
 	return 0 != self.accessFlags&ACC_VOLATILE
 }

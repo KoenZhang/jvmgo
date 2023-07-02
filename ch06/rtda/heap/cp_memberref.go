@@ -8,7 +8,6 @@ type MemberRef struct {
 	descriptor string
 }
 
-// 从class文件内存储的字段或方法常量中提取数据
 func (self *MemberRef) copyMemberRefInfo(refInfo *classfile.ConstantMemberrefInfo) {
 	self.className = refInfo.ClassName()
 	self.name, self.descriptor = refInfo.NameAndDescriptor()

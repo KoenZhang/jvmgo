@@ -2,7 +2,6 @@ package heap
 
 import "jvmgo/ch06/classfile"
 
-// 继承 SymRef
 type ClassRef struct {
 	SymRef
 }

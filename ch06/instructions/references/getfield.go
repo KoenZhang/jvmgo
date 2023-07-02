@@ -1,19 +1,11 @@
 package references
 
-import (
-	"jvmgo/ch06/instructions/base"
-	"jvmgo/ch06/rtda"
-	"jvmgo/ch06/rtda/heap"
-)
+import "jvmgo/ch06/instructions/base"
+import "jvmgo/ch06/rtda"
+import "jvmgo/ch06/rtda/heap"
 
-/**
-getfield指令获取对象的实例变量值，然后推入操作数栈，它需要两个操作数:
-1. 第一个操作数是uint16索引
-2. 第二个操作数是对象引用, 来自操作数栈
-*/
-type GET_FIELD struct {
-	base.Index16Instruction
-}
+// Fetch field from object
+type GET_FIELD struct{ base.Index16Instruction }
 
 func (self *GET_FIELD) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
@@ -25,16 +17,16 @@ func (self *GET_FIELD) Execute(frame *rtda.Frame) {
 	}
 
 	stack := frame.OperandStack()
-	// 弹出对象引用
 	ref := stack.PopRef()
 	if ref == nil {
 		panic("java.lang.NullPointerException")
 	}
-	// 获取字段描述符
+
 	descriptor := field.Descriptor()
 	slotId := field.SlotId()
 	slots := ref.Fields()
-	switch descriptor[0] { // 获取字段类型
+
+	switch descriptor[0] {
 	case 'Z', 'B', 'C', 'S', 'I':
 		stack.PushInt(slots.GetInt(slotId))
 	case 'F':
