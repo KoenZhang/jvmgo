@@ -83,14 +83,10 @@ func (self *Class) isAccessibleTo(other *Class) bool {
 
 // 如果类D想访问类C，需要满足两个条件之一：C是public，或者C和D在同一个运行时包内
 func (self *Class) getPackageName() string {
-	if i := strings.LastIndex(self.name, "/"); i > 0 {
+	if i := strings.LastIndex(self.name, "/"); i >= 0 {
 		return self.name[:i]
 	}
 	return ""
-}
-
-func (self *Class) NewObject() *Object {
-	return newObject(self)
 }
 
 func (self *Class) GetMainMethod() *Method {
@@ -107,4 +103,8 @@ func (self *Class) getStaticMethod(name, descriptor string) *Method {
 		}
 	}
 	return nil
+}
+
+func (self *Class) NewObject() *Object {
+	return newObject(self)
 }
