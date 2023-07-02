@@ -26,6 +26,7 @@ func (self *INSTANCE_OF) Execute(frame *rtda.Frame) {
 	// 先弹出对象引用，如果是null，则把 0 推入操作数栈
 	if ref == nil {
 		stack.PushInt(0)
+		return
 	}
 
 	cp := frame.Method().Class().ConstantPool()

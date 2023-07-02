@@ -44,7 +44,9 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 	}
 	// 常量， 只能在类初始化方法中给它赋值
 	if field.IsFinal() {
-		panic("java.lang.IllegalAccessError")
+		if currentClass != class || currentMethod.Name() != "<clinit>" {
+			panic("java.lang.IllegalAccessError")
+		}
 	}
 
 	// 根据字段类型从操作数栈中弹出相应的值，然后赋给静态变量
@@ -52,6 +54,7 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 	slotId := field.SlotId()
 	slots := class.StaticVars()
 	stack := frame.OperandStack()
+
 	switch descriptor[0] {
 	case 'Z', 'B', 'C', 'S', 'I': // Z--boolean, B--byte, C--Char, S--short, I--int
 		slots.SetInt(slotId, stack.PopInt())
