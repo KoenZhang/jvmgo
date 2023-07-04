@@ -30,14 +30,56 @@ type ARETURN struct {
 	base.NoOperandsInstruction
 }
 
+func (self *ARETURN) Execute(frame *rtda.Frame) {
+	// 根据栈帧获取当前进程
+	thread := frame.Thread()
+	// 弹出栈帧，根据当前进程获取被调用者，现在被调用者已经执行完毕
+	currentFrame := thread.PopFrame()
+	// 获取被调用者的返回值
+	retVal := currentFrame.OperandStack().PopRef()
+
+	// 现在进程最新的方法是调用者，这时直接获取即可，不用弹出栈帧
+	invokerFrame := thread.TopFrame()
+	// 将被调用者执行后的返回值压入调用者操作数栈栈顶
+	invokerFrame.OperandStack().PushRef(retVal)
+}
+
 // 用于返回 double 类型的值
 type DRETURN struct {
 	base.NoOperandsInstruction
 }
 
+func (self *DRETURN) Execute(frame *rtda.Frame) {
+	// 根据栈帧获取当前进程
+	thread := frame.Thread()
+	// 弹出栈帧，根据当前进程获取被调用者，现在被调用者已经执行完毕
+	currentFrame := thread.PopFrame()
+	// 获取被调用者的返回值
+	retVal := currentFrame.OperandStack().PopDouble()
+
+	// 现在进程最新的方法是调用者，这时直接获取即可，不用弹出栈帧
+	invokerFrame := thread.TopFrame()
+	// 将被调用者执行后的返回值压入调用者操作数栈栈顶
+	invokerFrame.OperandStack().PushDouble(retVal)
+}
+
 // 用于返回 float 类型的值
 type FRETURN struct {
 	base.NoOperandsInstruction
+}
+
+func (self *FRETURN) Execute(frame *rtda.Frame) {
+	// 根据栈帧获取当前进程
+	thread := frame.Thread()
+	// 弹出栈帧，根据当前进程获取被调用者，现在被调用者已经执行完毕
+	currentFrame := thread.PopFrame()
+	// 获取被调用者的返回值
+	retVal := currentFrame.OperandStack().PopFloat()
+
+	// 现在进程最新的方法是调用者，这时直接获取即可，不用弹出栈帧
+	invokerFrame := thread.TopFrame()
+	// 将被调用者执行后的返回值压入调用者操作数栈栈顶
+	invokerFrame.OperandStack().PushFloat(retVal)
 }
 
 // 用于返回 int 类型的值
@@ -62,4 +104,18 @@ func (self *IRETURN) Execute(frame *rtda.Frame) {
 // 用于返回 long 类型的值
 type LRETURN struct {
 	base.NoOperandsInstruction
+}
+
+func (self *LRETURN) Execute(frame *rtda.Frame) {
+	// 根据栈帧获取当前进程
+	thread := frame.Thread()
+	// 弹出栈帧，根据当前进程获取被调用者，现在被调用者已经执行完毕
+	currentFrame := thread.PopFrame()
+	// 获取被调用者的返回值
+	retVal := currentFrame.OperandStack().PopLong()
+
+	// 现在进程最新的方法是调用者，这时直接获取即可，不用弹出栈帧
+	invokerFrame := thread.TopFrame()
+	// 将被调用者执行后的返回值压入调用者操作数栈栈顶
+	invokerFrame.OperandStack().PushLong(retVal)
 }
