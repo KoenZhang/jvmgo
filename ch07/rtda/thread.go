@@ -44,3 +44,7 @@ func (self *Thread) CurrentFrame() *Frame {
 func (self *Thread) NewFrame(method *heap.Method) *Frame {
 	return newFrame(self, method)
 }
+
+func (self *Thread) TopFrame() *Frame {
+	return self.stack.top()
+}
