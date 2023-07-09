@@ -48,3 +48,7 @@ func (self *Thread) NewFrame(method *heap.Method) *Frame {
 func (self *Thread) TopFrame() *Frame {
 	return self.stack.top()
 }
+
+func (self *Thread) IsStackEmpty() bool {
+	return self.stack.isEmpty()
+}
