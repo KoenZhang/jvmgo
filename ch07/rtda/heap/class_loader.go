@@ -7,14 +7,16 @@ import (
 )
 
 type ClassLoader struct {
-	cp       *classpath.Classpath // class文件所在路径
-	classMap map[string]*Class    //	已经加载过的class文件， key是类的完全限定名， 这里可以将其当作方法区的简化实现
+	cp          *classpath.Classpath // class文件所在路径
+	verboseFlag bool                 // 制是否把类加载信息输出到控制台
+	classMap    map[string]*Class    //	已经加载过的class文件， key是类的完全限定名， 这里可以将其当作方法区的简化实现
 }
 
-func NewClassLoader(cp *classpath.Classpath) *ClassLoader {
+func NewClassLoader(cp *classpath.Classpath, verboseFlag bool) *ClassLoader {
 	return &ClassLoader{
-		cp:       cp,
-		classMap: make(map[string]*Class),
+		cp:          cp,
+		verboseFlag: verboseFlag,
+		classMap:    make(map[string]*Class),
 	}
 }
 
@@ -31,7 +33,9 @@ func (self *ClassLoader) loadNonArrayClass(name string) *Class {
 	data, entry := self.readClass(name) // 读取文件
 	class := self.defineClass(data)     // 解析class文件，生成虚拟机可以使用的类数据，并放入方法区
 	link(class)                         // 链接
-	fmt.Printf("[Loaded %s from %s]\n", name, entry)
+	if self.verboseFlag {
+		fmt.Printf("[Loaded %s from %s]\n", name, entry)
+	}
 	return class
 }
 
