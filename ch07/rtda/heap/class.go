@@ -20,6 +20,7 @@ type Class struct {
 	instanceSlotCount uint          // 实例变量占用的空间
 	staticSlotCount   uint          // 类变量占用的空间
 	staticVars        Slots         // 静态变量
+	initStarted       bool          // 类是否已被初始化
 }
 
 /**
@@ -45,6 +46,25 @@ func (self *Class) ConstantPool() *ConstantPool {
 }
 func (self *Class) StaticVars() Slots {
 	return self.staticVars
+}
+func (self *Class) Name() string {
+	return self.name
+}
+func (self *Class) Fields() []*Field {
+	return self.fields
+}
+func (self *Class) Methods() []*Method {
+	return self.methods
+}
+func (self *Class) SuperClass() *Class {
+	return self.superClass
+}
+func (self *Class) InitStarted() bool {
+	return self.initStarted
+}
+
+func (self *Class) StartInit() {
+	self.initStarted = true
 }
 
 /**
@@ -78,11 +98,11 @@ func (self *Class) IsEnum() bool {
 
 // 如果类D想访问类C，需要满足两个条件之一：C是public，或者C和D在同一个运行时包内
 func (self *Class) isAccessibleTo(other *Class) bool {
-	return self.IsPublic() || self.getPackageName() == other.getPackageName()
+	return self.IsPublic() || self.GetPackageName() == other.GetPackageName()
 }
 
 // 如果类D想访问类C，需要满足两个条件之一：C是public，或者C和D在同一个运行时包内
-func (self *Class) getPackageName() string {
+func (self *Class) GetPackageName() string {
 	if i := strings.LastIndex(self.name, "/"); i >= 0 {
 		return self.name[:i]
 	}
